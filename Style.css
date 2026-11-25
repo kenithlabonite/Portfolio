@@ -1,35 +1,96 @@
-/* Base Styles */
+/* ==========================================================================
+   Portfolio Stylesheet - Kenith Mangyao Labonite
+   Full-Stack Developer & Database Architect
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Base & Reset Defaults
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
 body {
   background-color: #0b0f19;
   color: #e2e8f0;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   overflow-x: hidden;
+  margin: 0;
+  padding: 0;
 }
 
-/* Subtle Grid Background */
+/* Custom Text Selection */
+::selection {
+  background-color: rgba(99, 102, 241, 0.35);
+  color: #e0e7ff;
+}
+
+/* --------------------------------------------------------------------------
+   2. Custom Scrollbar
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 5px;
+  border: 2px solid #0b0f19;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* --------------------------------------------------------------------------
+   3. Background Grid Pattern
+   -------------------------------------------------------------------------- */
 .bg-grid {
   background-size: 40px 40px;
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(99, 102, 241, 0.06) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(99, 102, 241, 0.06) 1px, transparent 1px);
 }
 
-/* Glassmorphism Surface */
+/* --------------------------------------------------------------------------
+   4. Glassmorphism Surface
+   -------------------------------------------------------------------------- */
 .glass {
-  background: rgba(17, 24, 39, 0.72);
+  background: rgba(17, 24, 39, 0.78);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(148, 163, 184, 0.12);
 }
 
-/* Hero Gradient Text */
+/* Fallback for browsers that do not support backdrop-filter */
+@supports not (backdrop-filter: blur(14px)) {
+  .glass {
+    background: rgba(17, 24, 39, 0.95);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. Typography & Gradient Accents
+   -------------------------------------------------------------------------- */
 .text-gradient {
   background: linear-gradient(135deg, #818cf8 0%, #22d3ee 50%, #f43f5e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Interactive Card Elevation */
+/* --------------------------------------------------------------------------
+   6. Interactive Cards & Elevation
+   -------------------------------------------------------------------------- */
 .card-hover {
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
@@ -40,7 +101,15 @@ body {
   box-shadow: 0 12px 30px -10px rgba(79, 70, 229, 0.25);
 }
 
-/* Modal Fade-In Animation */
+/* Card focus outlines for keyboard navigation accessibility */
+.card-hover:focus-visible {
+  outline: 2px solid #818cf8;
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   7. Keyframe Animations
+   -------------------------------------------------------------------------- */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -56,22 +125,40 @@ body {
   animation: fadeIn 0.2s ease-out forwards;
 }
 
-/* Print Rules for Resume Modal */
+/* --------------------------------------------------------------------------
+   8. Print Stylesheet (Resume Modal)
+   -------------------------------------------------------------------------- */
 @media print {
   body * {
     visibility: hidden;
   }
+
   #printable-resume,
   #printable-resume * {
     visibility: visible;
   }
+
   #printable-resume {
     position: fixed;
     left: 0;
     top: 0;
     width: 100%;
+    margin: 0;
+    padding: 24px;
     background: #ffffff !important;
     color: #0f172a !important;
-    padding: 20px;
+    max-height: none !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    border: none !important;
+    z-index: 99999;
+  }
+
+  /* Prevent awkward page breaks inside items */
+  #printable-resume > div,
+  #printable-resume ul,
+  #printable-resume li {
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
 }
