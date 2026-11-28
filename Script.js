@@ -19,7 +19,7 @@ const skillsData = [
     proficiency: 95,
     desc: 'Object-oriented backend architecture, clean service layers, LINQ querying, dependency injection, and enterprise APIs.',
     tags: ['C#', '.NET 8', 'ASP.NET Core', 'LINQ'],
-    relatedProjects: ['Smart-Exam', 'Employee Directory & Auth System'],
+    relatedProjects: ['Smart-Exam'],
     highlights: [
       'Builds structured RESTful APIs and backend services using C# and .NET 8.',
       'Implements clean architecture patterns with dependency injection and strong separation of concerns.'
@@ -34,7 +34,7 @@ const skillsData = [
     proficiency: 92,
     desc: 'RESTful API design, controller architecture, middleware, secure authentication, and unified C# backend workflows.',
     tags: ['REST API', 'ASP.NET Core', 'Swagger', 'JWT / Auth'],
-    relatedProjects: ['Employee Directory & Auth System', 'Smart-Exam'],
+    relatedProjects: ['Smart-Exam'],
     highlights: [
       'Designs clean, predictable RESTful API contracts with Swagger / OpenAPI documentation.',
       'Implemented secure authentication, authorization, and transactional update flows backed by relational storage.'
@@ -49,7 +49,7 @@ const skillsData = [
     proficiency: 94,
     desc: 'Normalized schema design, relational constraints, query optimization, and Navicat administration.',
     tags: ['MySQL', 'ERD Modeling', 'Data Integrity', 'Navicat'],
-    relatedProjects: ['Smart-Exam', 'Employee Directory & Auth System', 'Student Council Election System'],
+    relatedProjects: ['Smart-Exam'],
     highlights: [
       'Analytical database modeling focused on eliminating duplicate records and enforcing relational integrity.',
       'Designs transactional tables for exams, employee accounts, ballots, and operational records.'
@@ -64,7 +64,7 @@ const skillsData = [
     proficiency: 82,
     desc: 'Responsive component-driven interfaces, semantic HTML5, modern CSS, and JavaScript.',
     tags: ['Angular', 'JavaScript', 'HTML5', 'CSS3 / Tailwind'],
-    relatedProjects: ['AI Assistant Full-Stack Platform', 'Student Council Election System'],
+    relatedProjects: ['Smart-Exam'],
     highlights: [
       'Separates Angular frontend client architecture cleanly from backend REST services.',
       'Builds responsive, mobile-friendly interfaces for dashboards, chat, and voting portals.'
@@ -79,7 +79,7 @@ const skillsData = [
     proficiency: 85,
     desc: 'Integrating Gemini AI API for content generation and Tesseract OCR for automated document grading.',
     tags: ['Gemini AI API', 'Tesseract OCR', 'Prompt Design'],
-    relatedProjects: ['Smart-Exam', 'AI Assistant Full-Stack Platform'],
+    relatedProjects: ['Smart-Exam'],
     highlights: [
       'Generates structured examination questionnaires with Gemini AI and pairs with Tesseract OCR for grading.',
       'Combines AI automation with human-in-the-loop review and structured database storage.'
@@ -94,7 +94,7 @@ const skillsData = [
     proficiency: 88,
     desc: 'Windows 11 administration, network troubleshooting, OBS streaming, Google Apps Script macros, and brand design.',
     tags: ['DevOps / Infra', 'Apps Script', 'OBS Studio', 'Brand Design'],
-    relatedProjects: ['NC Mendoza Beauty Lounge', 'Local Business Solutions'],
+    relatedProjects: ['NC Mendoza Beauty Lounge'],
     highlights: [
       'Configures local router networks, system administration, and automated Google Apps Script workflows.',
       'Creates high-impact brand visual assets, tarpaulins, and social media automation.'
@@ -118,54 +118,6 @@ const projectsData = [
     accent: 'from-indigo-500 to-cyan-500',
     githubUrl: '',
     liveUrl: 'https://kaleidoscopically-viewier-marcus.ngrok-free.dev'
-  },
-  {
-    id: 'employee-dir',
-    title: 'Employee Directory & Auth System',
-    category: 'Enterprise Web App • ASP.NET Web API & Razor',
-    summary: 'Full-stack C# employee management and authentication platform with secure self-service email updates.',
-    architecture: 'Razor Pages Frontend (C#) ➔ ASP.NET Web API ➔ Authentication & Validation Service ➔ MySQL Database',
-    highlights: [
-      'Built end-to-end in C# across both Razor Pages UI and ASP.NET Web API services.',
-      'Implemented secure credential verification and transactional email update workflows.',
-      'Designed clean relational tables enforcing employee record integrity.'
-    ],
-    tags: ['C#', 'ASP.NET Web API', 'Razor Pages', 'MySQL'],
-    accent: 'from-cyan-500 to-emerald-500',
-    githubUrl: '',
-    liveUrl: ''
-  },
-  {
-    id: 'ai-assistant',
-    title: 'AI Assistant Full-Stack Platform',
-    category: 'Decoupled Architecture • AI & API',
-    summary: 'Modular conversational assistant separating a scalable backend API from an interactive Angular frontend.',
-    architecture: 'Angular SPA (aiAssistantAngular) ➔ REST JSON API ➔ Backend Service (aiAssistant) ➔ LLM Integration',
-    highlights: [
-      'Clean repository separation between backend service logic and Angular client UI.',
-      'Real-time prompt handling, asynchronous state management, and responsive chat layout.',
-      'Structured for iterative Agile feature expansion.'
-    ],
-    tags: ['Angular', 'REST API', 'Node.js / C#', 'TypeScript'],
-    accent: 'from-violet-500 to-indigo-500',
-    githubUrl: '',
-    liveUrl: ''
-  },
-  {
-    id: 'election-system',
-    title: 'Student Council Election System',
-    category: 'Governance Software • Agile MVP',
-    summary: 'Streamlined, tamper-resistant campus voting system scoped around speed, reliability, and clear voter verification.',
-    architecture: 'Web Voting Portal ➔ Voter Eligibility & Ballot API ➔ Transactional MySQL Vote Ledger',
-    highlights: [
-      'Applied Agile MVP discipline—eliminating unnecessary complexity to guarantee election-day uptime.',
-      'Enforced one-voter-one-ballot database constraints and real-time tally aggregation.',
-      'Intuitive candidate presentation and mobile-friendly ballot interface.'
-    ],
-    tags: ['C#', 'MySQL', 'Agile MVP', 'Database Integrity'],
-    accent: 'from-amber-500 to-rose-500',
-    githubUrl: '',
-    liveUrl: ''
   },
   {
     id: 'nc-mendoza',
