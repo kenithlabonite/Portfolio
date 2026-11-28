@@ -6,6 +6,13 @@
 'use strict';
 
 /* ==========================================================================
+   Google Sheets Contact Web App Endpoint
+   Deploy GoogleAppsScript.js to Google Sheets as a Web App, then paste
+   your deployment URL below (e.g. https://script.google.com/macros/s/AKfycb.../exec)
+   ========================================================================== */
+const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxxL6mEB-leEDn1B3cGAJI1tcaBAFWFH6BB2eMMJaKdm2NuIPnWz3EHSU1Co6IoUm--Mg/exec';
+
+/* ==========================================================================
    1. Data Stores
    ========================================================================== */
 
@@ -133,7 +140,13 @@ const projectsData = [
     tags: ['Brand Design', 'Print Layout', 'Meta Business Suite', 'Apps Script'],
     accent: 'from-rose-600 to-pink-500',
     githubUrl: '',
-    liveUrl: ''
+    liveUrl: '',
+    images: [
+      { url: './images/Logo.jpg', caption: 'Official Brand Identity & Logo' },
+      { url: './images/Front.jpg', caption: 'Storefront & Signage Branding' },
+      { url: './images/Door.jpg', caption: 'Entrance & Glass Door Decals' },
+      { url: './images/Seats.jpg', caption: 'Interior Styling Stations & Lounge' }
+    ]
   }
 ];
 
@@ -303,6 +316,7 @@ function renderProjects() {
   grid.innerHTML = projectsData.map((project) => {
     const hasGithub = Boolean(project.githubUrl);
     const hasLive = Boolean(project.liveUrl);
+    const hasImages = Boolean(project.images && project.images.length > 0);
 
     return `
       <div
@@ -320,6 +334,11 @@ function renderProjects() {
                 ${escapeHtml(project.category)}
               </span>
               <div class="flex items-center gap-1.5">
+                ${hasImages ? `
+                  <span class="inline-flex items-center gap-1 font-mono text-[11px] px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/25">
+                    <i data-lucide="image" class="w-3 h-3"></i> ${project.images.length} Photos
+                  </span>
+                ` : ''}
                 ${hasGithub ? `
                   <a href="${escapeHtml(project.githubUrl)}" target="_blank" rel="noopener noreferrer"
                      title="View GitHub Repository" aria-label="GitHub Repository"
@@ -370,6 +389,7 @@ function openProjectModal(id) {
   const categoryEl = document.getElementById('modal-category');
   const titleEl = document.getElementById('modal-title');
   const descEl = document.getElementById('modal-desc');
+  const imagesEl = document.getElementById('modal-images');
   const archEl = document.getElementById('modal-arch');
   const highlightsEl = document.getElementById('modal-highlights');
   const tagsEl = document.getElementById('modal-tags');
@@ -380,6 +400,63 @@ function openProjectModal(id) {
   if (titleEl) titleEl.textContent = project.title;
   if (descEl) descEl.textContent = project.summary;
   if (archEl) archEl.textContent = project.architecture;
+
+  if (imagesEl) {
+    const rawImages = Array.isArray(project.images)
+      ? project.images
+      : (project.image ? [project.image] : []);
+
+    if (rawImages.length > 0) {
+      if (rawImages.length === 1) {
+        const img = typeof rawImages[0] === 'string' ? { url: rawImages[0], caption: '' } : rawImages[0];
+        imagesEl.innerHTML = `
+          <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950/70 shadow-lg group">
+            <img src="${escapeHtml(img.url)}" alt="${escapeHtml(img.caption || project.title)}"
+                 class="w-full max-h-80 object-cover object-center transition-transform duration-300 group-hover:scale-[1.01]"
+                 loading="lazy" />
+            ${img.caption ? `
+              <div class="p-2.5 bg-slate-950/90 border-t border-slate-800 text-[11px] font-mono text-slate-400">
+                ${escapeHtml(img.caption)}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      } else {
+        imagesEl.innerHTML = `
+          <div class="space-y-2.5">
+            <div class="font-mono text-xs text-indigo-400 flex items-center gap-1.5">
+              <i data-lucide="image" class="w-3.5 h-3.5"></i> Visual Branding &amp; Storefront Photos (${rawImages.length})
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              ${rawImages.map((imgItem) => {
+          const img = typeof imgItem === 'string' ? { url: imgItem, caption: '' } : imgItem;
+          return `
+                  <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950/70 shadow-md group">
+                    <div class="overflow-hidden h-44 sm:h-48 bg-slate-950 flex items-center justify-center">
+                      <img src="${escapeHtml(img.url)}" alt="${escapeHtml(img.caption || project.title)}"
+                           class="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105 cursor-pointer"
+                           onclick="window.open('${escapeHtml(img.url)}', '_blank')"
+                           title="Click to view full image"
+                           loading="lazy" />
+                    </div>
+                    ${img.caption ? `
+                      <div class="p-2.5 bg-slate-950/90 border-t border-slate-800 text-[11px] font-mono text-slate-300 truncate">
+                        ${escapeHtml(img.caption)}
+                      </div>
+                    ` : ''}
+                  </div>
+                `;
+        }).join('')}
+            </div>
+          </div>
+        `;
+      }
+      imagesEl.classList.remove('hidden');
+    } else {
+      imagesEl.innerHTML = '';
+      imagesEl.classList.add('hidden');
+    }
+  }
 
   if (highlightsEl) {
     highlightsEl.innerHTML = project.highlights
@@ -613,13 +690,81 @@ function initPortfolioApp() {
     });
   }
 
-  // Contact form submission
+  // Contact form submission with Google Sheets recording
   const contactForm = document.getElementById('contact-form');
+  const submitBtn = document.getElementById('contact-submit-btn');
+
   if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      contactForm.reset();
-      showToast('Message sent! Kenith will get back to you soon.');
+
+      const nameInput = document.getElementById('contact-name');
+      const emailInput = document.getElementById('contact-email');
+      const subjectInput = document.getElementById('contact-subject');
+      const messageInput = document.getElementById('contact-message');
+
+      const payload = {
+        name: nameInput ? nameInput.value.trim() : '',
+        email: emailInput ? emailInput.value.trim() : '',
+        subject: subjectInput ? subjectInput.value.trim() : '',
+        message: messageInput ? messageInput.value.trim() : '',
+        timestamp: new Date().toISOString()
+      };
+
+      const originalBtnHtml = submitBtn ? submitBtn.innerHTML : 'Send Message';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+          </svg>
+          Sending...
+        `;
+      }
+
+      // If user has not yet configured their Google Apps Script endpoint
+      if (!GOOGLE_SHEETS_ENDPOINT || GOOGLE_SHEETS_ENDPOINT.trim() === '') {
+        setTimeout(() => {
+          contactForm.reset();
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHtml;
+            if (window.lucide && typeof window.lucide.createIcons === 'function') {
+              window.lucide.createIcons();
+            }
+          }
+          showToast('Message submitted! (Paste your Google Sheet Web App URL in Script.js to log to Sheets)');
+        }, 800);
+        return;
+      }
+
+      try {
+        // Send payload to Google Apps Script Web App
+        // Using text/plain and no-cors ensures smooth delivery without CORS preflight blocks
+        await fetch(GOOGLE_SHEETS_ENDPOINT, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        contactForm.reset();
+        showToast('Message sent! I will get back to you soon. Thank you.');
+      } catch (err) {
+        console.error('Error submitting message to Google Sheets:', err);
+        showToast('Error Sending message. Please reach out directly.');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnHtml;
+          if (window.lucide && typeof window.lucide.createIcons === 'function') {
+            window.lucide.createIcons();
+          }
+        }
+      }
     });
   }
 
